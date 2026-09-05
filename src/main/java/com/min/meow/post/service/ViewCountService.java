@@ -3,6 +3,7 @@ package com.min.meow.post.service;
 import com.min.meow.common.PostType;
 import com.min.meow.post.repository.BoastCatPostRepository;
 import com.min.meow.post.repository.LostCatRepository;
+import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.Cursor;
@@ -114,6 +115,7 @@ public class ViewCountService {
                 } catch (Exception redisEx) {
                     log.error("DB 반영 실패 + Redis 복원도 실패 - key: {}, delta: {} (조회수 유실)",
                             entry.getKey(), entry.getValue(), redisEx);
+                    Sentry.captureException(redisEx);
                 }
             }
         }
